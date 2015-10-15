@@ -11,4 +11,9 @@ return array(
         '__IMG__' => PUBLIC_PATH . 'imgs',
     ),
 
+    //调试模式
+    'SHOW_PAGE_TRACE' => true,  //页面trace调试
+    'TMPL_CACHE_ON' => true,   //禁止模板编译缓存
+    'HTML_CACHE_ON' => true,   //禁止静态缓存
+
 );

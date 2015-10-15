@@ -16,6 +16,6 @@ class AdministratorController extends Controller
 {
     public function index() {
         $rows = D('admin')->select();
-        var_dump($rows);
+        $this->display();
     }
 }
