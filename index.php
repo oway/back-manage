@@ -34,6 +34,8 @@ define('APP_PATH', './Application/');
 //定义文件缓存/日志路径
 define('RUN_PATH',ROOT_PATH . 'Runtime' . DIRECTORY_SEPARATOR);
 
+//定义分隔符
+define('DS', DIRECTORY_SEPARATOR);
 
 // 引入ThinkPHP入口文件
 require '../thinkphp/ThinkPHP/ThinkPHP.php';
