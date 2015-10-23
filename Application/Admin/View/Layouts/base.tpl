@@ -64,7 +64,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/home/index"><span>Bamboo Manage</span></a>
+        <a class="navbar-brand" href="/home/index"><span style="width: 240px;">backStage management</span></a>
 
         <!-- user dropdown starts -->
         <div class="btn-group pull-right">
@@ -86,7 +86,7 @@
         </div>
         <!--time end-->
 
-        <ul class="collapse navbar-collapse nav navbar-nav top-menu">
+        <ul class="collapse navbar-collapse nav navbar-nav top-menu" style="margin-left: 35px">
             <li><a href="/home/index"><i class="glyphicon glyphicon-globe"></i>首页</a></li>
             <li class="dropdown">
                 <a href="#" data-toggle="dropdown"><i class="glyphicon glyphicon-star"></i>下拉菜单
@@ -151,38 +151,38 @@
             <!---正文-->
             <div id="content" class="col-lg-10 col-sm-10">
                 <!-- content starts -->
-                {*{if !empty($breadcrumb)}*}
-                    {*<div>*}
-                        {*<ul class="breadcrumb">*}
-                            {*<li>*}
-                                {*<i class='glyphicon glyphicon-home blue' style="font-size: 20px"></i> 控制台*}
-                            {*</li>*}
-                            {*{foreach $breadcrumb as $k=>$v}*}
-                            {*<li>*}
-                                {*{if $k != '//' && $v@iteration != 1 }*}
-                                {*<a href="{$k}">{$v.name}</a>*}
-                                {*{else}*}
-                                {*{$v.name}*}
-                                {*{/if}*}
-                            {*</li>*}
-                            {*{/foreach}*}
-                        {*</ul>*}
-                    {*</div>*}
-                {*{/if}*}
-                {*<!----errorMessage start---->*}
-                {*{if isset($errorMessage) && !empty($errorMessage)}*}
-                    {*<div class="alert alert-{$errorMessage.type}">{$errorMessage.message|escape}</div>*}
-                {*{else}*}
-                {*<!---errorMessage end----->*}
+                {if !empty($breadcrumb)}
+                    <div>
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class='glyphicon glyphicon-home blue' style="font-size: 20px"></i> 控制台
+                            </li>
+                            {foreach $breadcrumb as $k=>$v}
+                            <li>
+                                {if $k != '//' && $v@iteration != 1 }
+                                <a href="{$k}">{$v.name}</a>
+                                {else}
+                                {$v.name}
+                                {/if}
+                            </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                {/if}
+                <!----errorMessage start---->
+                {if isset($errorMessage) && !empty($errorMessage)}
+                    <div class="alert alert-{$errorMessage.type}">{$errorMessage.message|escape}</div>
+                {/if}
+                <!---errorMessage end----->
 
-                {*<!----three start---->*}
-                {*{if !empty($threeMenu)}*}
-                    {*<p>*}
-                        {*{foreach $threeMenu as $k=>$v}*}
-                            {*<a href="{if $v.m}/{$v.m}{/if}/{$v.c}/{$v.a}{if !empty($v.data)}?{$v.data}{/if}" class="btn btn-primary btn-sm">{if !empty($v.icon)} <i class='ace-icon fa fa-{$v.icon}'></i>{/if}{$v.name}</a>*}
-                        {*{/foreach}*}
-                    {*</p>*}
-                {*{/if}*}
+                <!----three start---->
+                {if !empty($threeMenu)}
+                    <p>
+                        {foreach $threeMenu as $k=>$v}
+                            <a href="{if $v.m}/{$v.m}{/if}/{$v.c}/{$v.a}{if !empty($v.data)}?{$v.data}{/if}" class="btn btn-primary btn-sm">{if !empty($v.icon)} <i class='ace-icon fa fa-{$v.icon}'></i>{/if}{$v.name}</a>
+                        {/foreach}
+                    </p>
+                {/if}
                 <!----three end------>
 
                 <!---content start--->

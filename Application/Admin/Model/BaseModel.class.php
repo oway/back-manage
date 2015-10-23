@@ -17,9 +17,6 @@ class BaseModel extends Model
 {
     protected $connection = 'default';
 
-    public function getAdminId() {
-        return (empty(cookie('_uid'))) ? 1 : cookie('_uid');
-    }
     /**
      * 根据条件得到一行数据
      *
@@ -31,7 +28,7 @@ class BaseModel extends Model
     public function getRowByWhere($where = array(),$fields = ''){
         $rs = $this->field($fields)->where($where)->find();
         if( $rs !== false && !empty($rs)) {
-            return $rs[0];
+            return $rs;
         }
         return false;
     }

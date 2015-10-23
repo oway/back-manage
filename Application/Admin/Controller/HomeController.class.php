@@ -10,9 +10,17 @@
 namespace Admin\Controller;
 
 
+use Common\Library\Api;
+
 class HomeController extends BaseController
 {
     public function index() {
         $this->setTitle('首页');
+        $this->display();
+    }
+
+    public function test() {
+        $api = new Api();
+        $api->test();
     }
 }
