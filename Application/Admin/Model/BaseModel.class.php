@@ -17,6 +17,9 @@ class BaseModel extends Model
 {
     protected $connection = 'default';
 
+    const DISABLE_YES = 1;  //可用
+    const DISABLE_NO = -1;  //不可用
+
     /**
      * 根据条件得到一行数据
      *
@@ -59,7 +62,7 @@ class BaseModel extends Model
      * @return array
      */
     public function paginate($wheres = array(),$order = '') {
-        $count = $this->where($wheres)->count();
+        $count = $this->count($wheres);
         $page = new Page($count,C('PATH_SIZE'));
         $page->setConfig('theme','%FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END% %HEADER%');
         $pages = $page->show();
@@ -80,4 +83,16 @@ class BaseModel extends Model
      * @param $rows
      */
     protected function _handlePageRows(&$rows) {}
+
+    /**
+     * 更具条件删除
+     *
+     * @author Oway
+     * @param array $where 删除条件
+     * @return mixed
+     */
+    public function deleteByWhere($where = array()) {
+        return $this->where($where)->delete();
+    }
+
 }

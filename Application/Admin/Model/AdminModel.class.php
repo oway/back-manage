@@ -13,6 +13,16 @@ class AdminModel extends BaseModel
 {
     protected $connection = 'default';
 
+    //自动验证配置
+    protected $_validate = array(
+        array('username','require','用户名必填！'), //默认情况下用正则进行验证
+        array('password','require','密码必填！'), //默认情况下用正则进行验证
+        array('encrypt','require','encrypt必填！'), //默认情况下用正则进行验证
+        array('roleid',0,'请选择所属角色',1,'notequal'), // 在新增和修改时验证角色id不等于0时，通过验证
+        array('email','require','请填写邮箱'),
+        array('email','email','邮箱格式不正确') // 正则验证邮箱格式是否正确
+    );
+
     /**
      * 将用户id和username保存到cookie中
      *
@@ -91,5 +101,10 @@ class AdminModel extends BaseModel
             return true;
         }
         return false;
+    }
+
+    public function getTotal(){
+        $rows = $this->select();
+        dump($rows);
     }
 }

@@ -74,10 +74,9 @@ class AdminMenuModel extends BaseModel
         if(empty($menu)) {
             $menu = S(self::ADMIN_MENU_MEMCACHE);
         }
-
         $requestUrl = $_SERVER['REQUEST_URI'];
         if(!isset($menu['paths'][$requestUrl])) {
-            return false;
+            return array('status' => 0);
         }
         if(empty($id)) {
             $id = $menu['paths'][$requestUrl];
@@ -114,6 +113,6 @@ class AdminMenuModel extends BaseModel
                 return $rs;
             }
         }
-        exit;
+        return false;
     }
 }

@@ -25,10 +25,13 @@ class BaseController extends Controller
     protected $message;
 
     //面包屑导航
-    protected $breadcrumb = array('');
+    protected $breadcrumb = '/';
 
     //获取来路
     protected $referer;
+
+    //定义model
+    protected $model;
 
     const MESSAGE_TYPE_SUCCESS = 'success';
 
@@ -82,14 +85,13 @@ class BaseController extends Controller
             if( !$menu = D('AdminMenu')->getMenu() ) {
                 $this->redirect('/index/login');
             }
-            $this->assign('menu',$menu);
 
+            $this->assign('menu',$menu);
             //面包屑导航
             $this->assign('nowTitle','');
 
             $rulesed = array();
-            if($bread = D('AdminMenu')->getBreadCrumbNav()) {
-                $this->breadcrumb = array($this->breadcrumb,$bread);
+            if($this->breadcrumb = D('AdminMenu')->getBreadCrumbNav()) {
                 foreach($this->breadcrumb as $v) {
                     $this->assign('nowTitle',$v);
                     $rulesed[$v['name']] = '';
@@ -103,8 +105,8 @@ class BaseController extends Controller
                 $this->_threeMenu = D('AdminMenu')->getUrlChid();
                 $this->assign('threeMenu',$this->_threeMenu);
             }
-        }
 
+        }
         //检查权限
         if( !$this->checkAuth() ) {
             $this->redirect($this->referer,'没有权限访问本页.....');
@@ -139,7 +141,6 @@ class BaseController extends Controller
 
         return false;
     }
-
 
     protected function setTitle($title) {
         $this->siteTitle = $title;
@@ -182,7 +183,7 @@ class BaseController extends Controller
      * @param mixed $ajax 是否为Ajax方式 当数字时指定跳转时间
      * @return void
      */
-    protected function success($jumpUrl = '',$message = '',  $ajax = false)
+    protected function  success($jumpUrl = '',$message = '',  $ajax = false)
     {
         if (true === $ajax || IS_AJAX) {
             // AJAX提交

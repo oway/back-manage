@@ -63,3 +63,23 @@ function getTreeWithChildren($arr = array(),$pkField = '',$pidField='',$pid=0,$l
     }
     return $tree;
 }
+
+/**
+ * 得到下拉框
+ *
+ * @author Oway
+ * @param array $arr
+ * @param string $selectName 下拉框名称
+ * @param string $optionName    option内容
+ * @param string $optionValue   option值
+ * @return string
+ */
+function selectList($arr = array(),$selectName= '',$optionName='',$optionValue=''){
+    $str = '<div class="col-sm-4"><select name="'.$selectName.'" class="form-control" id="'.$selectName.'">';
+    $str .= '<option value="0">----请选择----</option>';
+    foreach($arr as $v) {
+        $str .= '<option value="'.$v[$optionValue].'">'.$v[$optionName].'</option>';
+    }
+    $str .= '</select></div>';
+    return $str;
+}

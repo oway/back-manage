@@ -157,15 +157,17 @@
                             <li>
                                 <i class='glyphicon glyphicon-home blue' style="font-size: 20px"></i> 控制台
                             </li>
-                            {foreach $breadcrumb as $k=>$v}
-                            <li>
-                                {if $k != '//' && $v@iteration != 1 }
-                                <a href="{$k}">{$v.name}</a>
-                                {else}
-                                {$v.name}
-                                {/if}
-                            </li>
-                            {/foreach}
+                            {if is_array($breadcrumb)}
+                                {foreach $breadcrumb as $k=>$v}
+                                <li>
+                                    {if $k != '//' && $v@iteration != 1 }
+                                    <a href="{$k}">{$v.name}</a>
+                                    {else}
+                                    {$v.name}
+                                    {/if}
+                                </li>
+                                {/foreach}
+                            {/if}
                         </ul>
                     </div>
                 {/if}

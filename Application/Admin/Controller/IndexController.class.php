@@ -11,7 +11,7 @@ class IndexController extends Controller {
 
     public function index() {
         if(!isLogin('_uid')) {
-            $this->error('请登陆.....','/index/login');
+            $this->redirect('/index/login');
         }
         //若登陆成功，则跳转到home首页
         $this->redirect( \Admin\Controller\BaseController::$homepage );
@@ -22,10 +22,10 @@ class IndexController extends Controller {
         if(IS_POST){
             $data = I('post.');
             $where = array();
-//            //>>验证验证码是否正确
-//            if( !checkVerify($data['verify']) ) {
-//                $this->error('/index/login','验证码错误');
-//            }
+            //>>验证验证码是否正确
+            if( !checkVerify($data['verify']) ) {
+                $this->error('验证码错误','/index/login');
+            }
             if(strpos($data['username'],'@') === false) {
                 $where['username'] = $data['username'];
             } else {
