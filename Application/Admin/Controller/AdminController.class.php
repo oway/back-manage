@@ -16,7 +16,7 @@ class AdminController extends BaseController
     public function index() {
         $this->setTitle('管理员首页');
         $wheres = array();
-        $data = D('Admin')->paginate($wheres);
+        $data = D('Admin')->paginate($wheres,'adminid DESC');
         $this->assign('data',$data);
         $this->display();
     }

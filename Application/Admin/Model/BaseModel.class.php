@@ -63,8 +63,8 @@ class BaseModel extends Model
      */
     public function paginate($wheres = array(),$order = '') {
         $count = $this->where($wheres)->count();
-        $page = new Page($count,C('PATH_SIZE'));
-        $page->setConfig('theme','%FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END% %HEADER%');
+        $page = new Page($count);
+        $page->setConfig('theme', '%FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END% %HEADER%');
         $pages = $page->show();
 
         $start = $page->firstRow;

@@ -33,5 +33,5 @@ return array(
     'TMPL_CACHE_ON' => false,   //禁止模板编译缓存
     'HTML_CACHE_ON' => false,   //禁止静态缓存
 
-    'PAGE_SIZE' => 20,  //每页显示数据条数
+    'PAGE_SIZE' => 5,  //每页显示数据条数
 );
