@@ -9,7 +9,7 @@
 
 namespace Admin\Controller;
 
-
+use Admin\Model\AdminRoleModel;
 use Think\Controller;
 
 class BaseController extends Controller
@@ -25,10 +25,13 @@ class BaseController extends Controller
     protected $message;
 
     //面包屑导航
-    protected $breadcrumb = array();
+    protected $breadcrumb = '/';
 
     //获取来路
     protected $referer;
+
+    //定义model
+    protected $model;
 
     const MESSAGE_TYPE_SUCCESS = 'success';
 
@@ -58,9 +61,10 @@ class BaseController extends Controller
     public static $withOutRight = array(
         '/index/logout' => '',
         '/home/index' => '',
-        '/home/#' => '',
+        '/home/' => '',
         '/home/error' => ''
     );
+
 
     /**
      * 控制器每个方法前执行
@@ -68,59 +72,72 @@ class BaseController extends Controller
      * @author Oway
      * @return bool
      */
-    protected function _initialize(){
-//        if(!isLogin('_uid')) {
-//            $this->redirect('/index/login','请登陆.....');
-//        }
-
+    protected function _initialize() {
+        $callback = $_SERVER['REQUEST_URI'];
+        if(!isLogin('_uid')) {
+            redirect('/index/login?callback=' . urlencode($callback),2,'请登陆.....');
+        }
         if($this->message = cookie('_Message')) {
-            $this->assign('errorMessage',$this->message);
             cookie('_Message',null);
+            $this->assign('errorMessage',$this->message);
         }
         $this->referer = $_SERVER['HTTP_REFERER'];
-
         if( IS_GET || IS_POST ) {
-            $menu = D('AdminMenu')->getMenu();
-            $this->assign('menu',$menu);
+            if( !$menu = D('AdminMenu')->getMenu() ) {
+                $this->redirect('/index/login');
+            }
 
-//            //面包屑导航
-//            $this->assign('nowTitle','');
-//            $rulesed = array();
-//            if($this->breadcrumb = D('AdminMenu')->getBreadCrumbNav()) {
-//                foreach($this->breadcrumb as $v) {
-//                    $this->assign('nowTitle',$v);
-//                    $rulesed[$v['name']] = '';
-//                    $this->setTitle($v['name']);
-//                }
-//            }
-//            $this->assign('rulesed',$rulesed);
-//            //查找第三极菜单
-//            if(count($this->breadcrumb) > 1) {
-//                //获取当前访问地址的子地址
-//                $this->_threeMenu = D('AdminMenu')->getUrlChid();
-//                $this->assign('threeMenu',$this->_threeMenu);
-//            }
+            $this->assign('menu',$menu);
+            //面包屑导航
+            $this->assign('nowTitle','');
+
+            $rulesed = array();
+            if($this->breadcrumb = D('AdminMenu')->getBreadCrumbNav()) {
+                foreach($this->breadcrumb as $v) {
+                    $this->assign('nowTitle',$v);
+                    $rulesed[$v['name']] = '';
+                    $this->setTitle($v['name']);
+                }
+            }
+            $this->assign('rulesed',$rulesed);
+            //查找第三极菜单
+            if(count($this->breadcrumb) > 1) {
+                //获取当前访问地址的子地址
+                $this->_threeMenu = D('AdminMenu')->getUrlChid();
+                $this->assign('threeMenu',$this->_threeMenu);
+            }
+
         }
-//
-//        //检查权限
-//        if( !$this->checkAuth() ) {
-//            $url = $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-//            if( !isset($url) ) {
-//                $this->redirect($this->referer,'没有权限访问本页.....');
-//            }
-//            $this->redirect('/home/error');
-//        }
+        //检查权限
+        if( !$this->checkAuth() ) {
+            $this->redirect($this->referer,'没有权限访问本页.....');
+        }
+
+        if( strtolower(CONTROLLER_NAME) != 'home') {
+            $this->model = D(CONTROLLER_NAME);
+        }
     }
 
+    /**
+     * 检查权限
+     *
+     * @author Oway
+     * @return bool
+     */
     public function checkAuth() {
+        //超级用户不需要检查权限
+        $roleid = D('Admin')->where(array('adminid' => getUId()))->field('roleid');
+        if($roleid == AdminRoleModel::SUPER_ROLEID) {
+            return true;
+        }
         //当用户访问的控制器是以public开头的，将不需要对权限进行判断
         if( strtolower(substr(ACTION_NAME, 0, 6) == 'public') ) {
             return true;
         }
 
-        $controllerRules = (!empty(MODULE_NAME) ? MODULE_NAME : '') . '/' . CONTROLLER_NAME . '/';
-        $actionRules = $controllerRules . ACTION_NAME . '/';
-
+//        $controllerRules = (!empty(MODULE_NAME) ? '/' . lcfirst(MODULE_NAME) : '') . '/' . lcfirst(CONTROLLER_NAME) . '/';
+        $controllerRules = '/' . lcfirst(CONTROLLER_NAME) . '/';
+        $actionRules = $controllerRules . lcfirst(ACTION_NAME);
         if(isset(self::$withOutCheckAuth[$controllerRules]) || isset(self::$withOutCheckAuth[$actionRules])) {
             return true;
         }
@@ -128,15 +145,20 @@ class BaseController extends Controller
         if(isset(self::$withOutRight[$controllerRules]) || isset(self::$withOutRight[$actionRules])) {
             return true;
         }
-//
-//        if(D('Admin')->checkPath($actionRules)) {
-//            return true;
-//        }
+
+        if(D('Admin')->checkPath($actionRules)) {
+            return true;
+        }
 
         return false;
     }
 
-
+    /**
+     * 设置title
+     *
+     * @author Oway
+     * @param $title
+     */
     protected function setTitle($title) {
         $this->siteTitle = $title;
     }
@@ -162,7 +184,7 @@ class BaseController extends Controller
         if (is_int($ajax)) {
             $this->assign('waitSecond', $ajax);
         }
-
+        dump($message);
         if(!empty($message)) {
             cookie('_Message',array('message' => $message,'type' => self::MESSAGE_TYPE_ERROR));
         }
@@ -178,7 +200,7 @@ class BaseController extends Controller
      * @param mixed $ajax 是否为Ajax方式 当数字时指定跳转时间
      * @return void
      */
-    protected function success($jumpUrl = '',$message = '',  $ajax = false)
+    protected function  success($jumpUrl = '',$message = '',  $ajax = false)
     {
         if (true === $ajax || IS_AJAX) {
             // AJAX提交
@@ -225,5 +247,4 @@ class BaseController extends Controller
     public function end(){
         exit();
     }
-
 }

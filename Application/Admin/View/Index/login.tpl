@@ -2,7 +2,9 @@
 {block name=layout_content}
     <style type="text/css">
         body {
-            background: url("{$smarty.const.PUBLIC_PATH}imgs/road.jpg");
+            background: url("{$smarty.const.PUBLIC_PATH}imgs/12.jpg");
+            background-size:100% 130%;
+            background-repeat: no-repeat;
         }
     </style>
     <div class="ch-container">
@@ -51,36 +53,12 @@
                                 </div>
                             </div>
                             <div class="clearfix"></div>
+                            <input type="hidden" name="callback" value="{$callback}">
                             <p class="center col-md-5">
                                 <button type="submit" class="btn btn-primary">登录</button>
                             </p>
                         </fieldset>
-                        <input type="hidden" name="callback" value="{$callback}">
                     </form>
-                    {*{$vali->form->beginForm('','post', ['class'=>'form-signin well well-l'])}*}
-                    {*{if $vali->hasError()}*}
-                        {*<div class="alert alert-danger">{$vali->form->errorSum()}</div>*}
-                    {*{/if}*}
-                    {*<fieldset>*}
-                        {*<div class="input-group input-group-lg">*}
-                            {*<span class="input-group-addon"><i class="glyphicon glyphicon-user red"></i></span>*}
-                            {*{$vali->form->input('username', ['class'=>'form-control', 'required'=>'', 'autofocus'=>'', 'placeholder'=>'请输入用户名或邮箱'])}*}
-                        {*</div>*}
-                        {*<div class="clearfix"></div>*}
-                        {*<br>*}
-
-                        {*<div class="input-group input-group-lg">*}
-                            {*<span class="input-group-addon"><i class="glyphicon glyphicon-lock red"></i></span>*}
-                            {*{$vali->form->password('password', ['class'=>'form-control', 'required'=>'', 'placeholder'=>'请输入密码'])}*}
-                        {*</div>*}
-                        {*<div class="clearfix"></div>*}
-                        {*<div class="clearfix"></div>*}
-                        {*<p class="center col-md-5">*}
-                            {*<button type="submit" class="btn btn-primary">登录</button>*}
-                        {*</p>*}
-                    {*</fieldset>*}
-                    {*{CForm::hidden('callback', $callback)}*}
-                    {*{$vali->form->endForm()}*}
                 </div>
                 <!--/span-->
             </div>
@@ -89,3 +67,4 @@
         <!--/fluid-row-->
     </div>
 {/block}
+

@@ -5,6 +5,11 @@ function isLogin($uid){
     return cookie($uid) ? cookie($uid) : false;
 }
 
+//得到adminid
+function getUId() {
+    return (!empty(cookie('_uid'))) ? cookie('_uid') : '';
+}
+
 //生成验证码
 function verify() {
     ob_clean();
@@ -46,15 +51,36 @@ function getTreeWithChildren($arr = array(),$pkField = '',$pidField='',$pid=0,$l
     if(!is_array($arr) || empty($arr)) {
         return $tree;
     }
-    foreach($arr as $row) {
+    foreach($arr as $key=>$row) {
         if($row[$pidField] == $pid) {
             $row['level'] = $level;
             $children = getTreeWithChildren($arr,$pkField,$pidField,$row[$pkField],$level+1);
             if(!empty($children)) {
-                $row['children'] = $children;
+                $row['child'] = $children;
             }
-            $tree[$row[$pkField]] = $row;
+            $tree[$key] = $row;
         }
     }
     return $tree;
+}
+
+/**
+ * 得到下拉框
+ *
+ * @author Oway
+ * @param array $arr
+ * @param string $id id
+ * @param string $value    option内容
+ * @param string $default  option中value默认值
+ * @return string
+ */
+function selectList($arr = array(),$id= '',$value='',$default = 0){
+    $str = '<div class="col-sm-4"><select name="'.$id.'" class="form-control" id="'.$id.'">';
+    $str .= '<option value="0">----请选择----</option>';
+    foreach($arr as $v) {
+        $selected = $v[$id] == $default ? 'selected' : '';
+        $str .= '<option value="'.$v[$id].'"'. $selected . '>'.$v[$value].'</option>';
+    }
+    $str .= '</select></div>';
+    return $str;
 }

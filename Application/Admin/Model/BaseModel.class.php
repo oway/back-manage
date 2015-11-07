@@ -17,9 +17,9 @@ class BaseModel extends Model
 {
     protected $connection = 'default';
 
-    public function getAdminId() {
-        return (empty(cookie('_uid'))) ? 1 : cookie('_uid');
-    }
+    const DISABLE_YES = 1;  //可用
+    const DISABLE_NO = -1;  //不可用
+
     /**
      * 根据条件得到一行数据
      *
@@ -31,7 +31,7 @@ class BaseModel extends Model
     public function getRowByWhere($where = array(),$fields = ''){
         $rs = $this->field($fields)->where($where)->find();
         if( $rs !== false && !empty($rs)) {
-            return $rs[0];
+            return $rs;
         }
         return false;
     }
@@ -83,4 +83,60 @@ class BaseModel extends Model
      * @param $rows
      */
     protected function _handlePageRows(&$rows) {}
+
+    /**
+     * 更具条件删除
+     *
+     * @author Oway
+     * @param array $where 删除条件
+     * @return mixed
+     */
+    public function deleteByWhere($where = array()) {
+        return $this->where($where)->delete();
+    }
+
+    /**
+     * 检查满足条件的数据是否存在
+     *
+     * @author Oway
+     * @param array $where
+     * @return bool
+     */
+    public function isExistByWhere($where = array()) {
+        if( $rs = $this->where($where)->find() ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 检查该主键记录是否存在
+     *
+     * @author Oway
+     * @param int|string $pk    主键值
+     * @return bool
+     */
+    public function isExistByPK($pk) {
+        if($this->where(array($this->getPk() => $pk))->find()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 根据条件查询某个字段的所有值
+     *
+     * @author Oway
+     * @param array $where  where条件
+     * @param string $fields    字段名
+     * @return array|string
+     */
+    public function getColumnByWhere($where = array(),$fields = '') {
+        $rows = $this->where($where)->select();
+        if( $rows === false && empty($rows) ) {
+            return null;
+        }
+        return array_column($rows,$fields);
+    }
+
 }
